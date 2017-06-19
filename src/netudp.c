@@ -16,6 +16,17 @@ struct sockaddr_in ftSrv;
 struct sockaddr_in xfCli;
 struct sockaddr_in xfSrv;
 
+void netudp_set_options(int csum_calc_off, int *ssock) {
+      
+   if(csum_calc_off) {
+      int disable = 1;
+      if (setsockopt(*ssock, SOL_SOCKET, SO_NO_CHECK, (void*)&disable, sizeof(disable)) < 0) {
+         perror("Failed to disable checksum calculation");
+         exit(1);
+      }
+   }   
+}
+
 void netudp_bind_server(int *ssock, char *port){
     *ssock = socket(AF_INET, SOCK_DGRAM, 0);
     
@@ -36,22 +47,12 @@ void netudp_bind_server(int *ssock, char *port){
 
 void netudp_rebind_server(int *ssock){
    
-   int csum_calc_off = 0;
-   
     *ssock = socket(AF_INET, SOCK_DGRAM, 0);
     
     if (*ssock == -1) {
         printf("Socket creation failed: %s\n",strerror(errno));
         exit(1);
     } 
-   
-   if(csum_calc_off) {
-      int disable = 1;
-      if (setsockopt(*ssock, SOL_SOCKET, SO_NO_CHECK, (void*)&disable, sizeof(disable)) < 0) {
-         perror("Failed to disable checksum calculation");
-         exit(1);
-      }
-   }
    
     xfSrv.sin_family = AF_INET;
     xfSrv.sin_addr.s_addr = INADDR_ANY;
