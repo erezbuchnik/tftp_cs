@@ -24,7 +24,7 @@ int socket1;
 int addrlen;
 char *port;
 int socket2;
-int port2;
+char *port2;
 int csum_calc_off;
 
 /* From tftp.c*/
@@ -49,15 +49,16 @@ static void wait_alarm(int);
 /* SERVER PROGRAM */
 int main(int argc, char *argv[]){
 
-    if (argc < 3) {
-        printf("Usage: %s < +c | -c > <port>\n", argv[0]);
+    if (argc < 4) {
+        printf("Usage: %s < +c | -c > <port> <port2>\n", argv[0]);
         exit(1);
     }
     
     int state = STATE_STANDBY;
     int operation;   
-    csum_calc_off = (strcmp("-c", argv[1])) ? 0 : 1;
+    csum_calc_off = ((strcmp("-c", argv[1]) == 0) ? 1 : 0);
     port = argv[2];
+    port2 = argv[3];
     netudp_bind_server(&socket1, port);
     netudp_set_options(csum_calc_off, &socket1);
     
@@ -114,7 +115,7 @@ void state_standby(int *operation){
             continue;
         }
         
-        netudp_rebind_server(&socket2, &port2);
+        netudp_rebind_server(&socket2, port2);
         netudp_set_options(csum_calc_off, &socket2);
         leave_standby = 1;
     }

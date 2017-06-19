@@ -17,15 +17,15 @@ struct sockaddr_in xfCli;
 struct sockaddr_in xfSrv;
 
 void netudp_set_options(int csum_calc_off, int *ssock) {
-      
-   if(csum_calc_off) {
-      int disable = 1;
-      if (setsockopt(*ssock, SOL_SOCKET, SO_NO_CHECK, (void*)&disable, sizeof(disable)) < 0) {
-         perror("Failed to disable checksum calculation");
-         exit(1);
-      }
-   }   
-}
+
+	int disable_csum_calc = (csum_calc_off ? 1 : 0);
+
+	if (setsockopt(*ssock, SOL_SOCKET, SO_NO_CHECK, 
+		(void*)&disable_csum_calc, sizeof(disable_csum_calc)) < 0) {
+		perror("Failed to disable checksum calculation");
+		exit(1);
+	};
+};
 
 void netudp_bind_server(int *ssock, char *port){
     *ssock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -45,7 +45,7 @@ void netudp_bind_server(int *ssock, char *port){
     }
 }
 
-void netudp_rebind_server(int *ssock){
+void netudp_rebind_server(int *ssock, char *port2){
    
     *ssock = socket(AF_INET, SOCK_DGRAM, 0);
     
@@ -56,7 +56,7 @@ void netudp_rebind_server(int *ssock){
    
     xfSrv.sin_family = AF_INET;
     xfSrv.sin_addr.s_addr = INADDR_ANY;
-    xfSrv.sin_port = 0;
+    xfSrv.sin_port = htons(atoi(port2));
    
     if ((bind(*ssock, (struct sockaddr *)&xfSrv, sizeof(xfSrv))) == -1){
         printf("Could not bind server to socket: %s\n",strerror(errno));
