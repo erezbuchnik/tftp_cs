@@ -7,6 +7,7 @@
 
 #include <sys/socket.h>
 
+void netudp_set_options(int csum_calc_off, int *ssock);
 void netudp_bind_server(int *ssock, char *port);
 void netudp_rebind_server(int *ssock, int *port2);
 void netudp_bind_client(int *ssock, char *server, char *port);
