@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
     csum_calc_off = (strcmp("-c", argv[1])) ? 0 : 1;
     port = argv[2];
     netudp_bind_server(&socket1, port);
-    netudp_set_options(csum_calc_off, socket1);
+    netudp_set_options(csum_calc_off, &socket1);
     
     while (state != STATE_FINISHED){
     
@@ -115,7 +115,7 @@ void state_standby(int *operation){
         }
         
         netudp_rebind_server(&socket2, &port2);
-        netudp_set_options(csum_calc_off, socket2);
+        netudp_set_options(csum_calc_off, &socket2);
         leave_standby = 1;
     }
     
