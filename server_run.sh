@@ -14,18 +14,24 @@ cd ../
 
 if [ "${csum_offload}" == "+c" ]
 then
-    ethtool --offload "${dev}" rx off tx off
+    ethtool -K "${dev}" rx off tx off
+    ethtool -K "${dev}" gso off
 else
-    ethtool --offload "${dev}" rx on tx on
+    ethtool -K "${dev}" rx on tx on
+    ethtool -K "${dev}" gso on
 fi
 
-tftp_cs/src/${server_name} ${csum_offload}  69  70 &
-tftp_cs/src/${server_name} ${csum_offload}  79  80 &
-tftp_cs/src/${server_name} ${csum_offload}  89  90 &
-tftp_cs/src/${server_name} ${csum_offload}  99 100 &
-tftp_cs/src/${server_name} ${csum_offload} 109 110 &
-tftp_cs/src/${server_name} ${csum_offload} 119 120 &
-tftp_cs/src/${server_name} ${csum_offload} 129 130 &
+killall ${server_name}
+sleep 1
+./src/${server_name} ${csum_offload}  69  70 &
+./src/${server_name} ${csum_offload}  79  80 &
+./src/${server_name} ${csum_offload}  89  90 &
+./src/${server_name} ${csum_offload}  99 100 &
+./src/${server_name} ${csum_offload} 109 110 &
+./src/${server_name} ${csum_offload} 119 120 &
+./src/${server_name} ${csum_offload} 129 130 &
+./src/${server_name} ${csum_offload} 139 140 &
+
 
 set +x
 
