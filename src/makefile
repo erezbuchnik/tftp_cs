@@ -2,14 +2,14 @@ CC = gcc
 CFLAGS = -ansi -Wall -D_POSIX_C_SOURCE
 COMMON = file.c fsm.c netudp.c tftp.c
 
-all: client server
+all: tftp_clnt tftp_srvr
 
-server:
-	$(CC) $(CFLAGS) server.c $(COMMON) -o server
-client: 
-	$(CC) $(CFLAGS) client.c $(COMMON) -o client
+tftp_srvr:
+	$(CC) $(CFLAGS) server.c $(COMMON) -o tftp_srvr
+tftp_clnt: 
+	$(CC) $(CFLAGS) client.c $(COMMON) -o tftp_clnt
 
 clean:
-	rm client
-	rm server
+	rm tftp_clnt
+	rm tftp_srvr
     
