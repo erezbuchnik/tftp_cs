@@ -7,8 +7,13 @@ set -x
 dev=$1
 csum_offload=$2
 
-if [[ $1 =
-ethtool --offload "${dev}" rx off tx off
+if [ "${csum_offload}" == "+c" ]
+then
+    ethtool --offload "${dev}" rx off tx off
+else
+    ethtool --offload "${dev}" rx on tx on
+fi
+
 cd ..
 tftp_cs/src/server "${csum_offload}"  69  70 &
 tftp_cs/src/server "${csum_offload}"  79  80 &
