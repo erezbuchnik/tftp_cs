@@ -5,7 +5,7 @@ set -x
 # E.G. without csum calc: server_run.sh eth0 -c
 
 dev=$1
-csum_offload=$2
+csum_offload=$2    
 
 server_name="tftp_srvr"
 cd ./src
